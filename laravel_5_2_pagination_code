@@ -1,0 +1,35 @@
+//view....
+<div class="panel-body">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                         @foreach($users as $u)   
+                          <tr>
+                            <td>{{$u->name}}</td>
+                            <td>{{$u->email}}</td>
+                          </tr>
+                         @endforeach;
+                        </tbody>
+                      </table>
+                      {{-- USING PAGINATE METHOD--}}
+                      {{ $users->links() }}
+
+                </div>
+//controller...
+public function index()
+    {
+        // PAGINATION USING PAGINATE() METHOD..  THIS WILL SIMPLY CREATE PAGINATION AT BLADE LIKE : 1,2,3,4,....
+       // $users = DB::table('users')->paginate(15);
+
+        // USING SIMPLE PAGINATE ..IT WILL JUST SHOW SIMPLE NEXT AND PREV BUTTON AT BLADE FILE..
+        $users = DB::table('users')->simplePaginate(15);
+
+        return view('home', compact('users'));
+    }
+    
+    
