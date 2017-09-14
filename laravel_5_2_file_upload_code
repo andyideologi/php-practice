@@ -1,0 +1,29 @@
+
+// view....
+<form action="{{ route('fileupload') }}" method="post" enctype="multipart/form-data">
+                        <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+
+                        Select image to upload:
+                        <input type="file" name="fileToUpload" id="fileToUpload">
+                        <input type="submit" value="Upload Image" name="submit">
+</form>
+
+// Controller...
+public function store(Request $request){
+
+        // $this->validate($request, [
+        //     'fileToUpload' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        // ]);
+
+        // file upload code...
+        if($request->hasfile('fileToUpload') ){
+
+            $image = $request->file('fileToUpload');
+            $input['imagename'] = time().'.'.$image->getClientOriginalExtension();  // get extension
+            $destinationPath = public_path('/uploads');
+            $image->move($destinationPath, $input['imagename']); // use move method to move file
+        }
+    }
+    
+//Route...
+Route::post('/home', 'HomeController@store')->name('fileupload');
