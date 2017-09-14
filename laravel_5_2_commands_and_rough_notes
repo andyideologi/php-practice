@@ -1,0 +1,420 @@
+<?php 
+// HELPFULL LINKS TO INSTALL LARAVEL and SETUP
+// 1. https://laravel.com/docs/5.3/installation
+// 2.https://selftaughtcoders.com/from-idea-to-launch/lesson-17/laravel-5-mvc-application-in-10-minutes/
+// 3.http://www.laravelinterviewquestions.com/laravel-interview-questions-and-answers#sthash.KBMvAaTt.dpbs
+
+// LARAVEL HOMESTEAD...
+https://laravel.com/docs/5.5/homestead
+Laravel Homestead is an official, pre-packaged Vagrant box that provides you 
+a wonderful development environment without requiring you to install PHP, a web server, 
+and any other server software on your local machine. 
+No more worrying about messing up your operating system! 
+Vagrant boxes are completely disposable. 
+If something goes wrong, you can destroy and re-create the box in minutes!
+
+Homestead runs on any Windows, Mac, or Linux system, 
+and includes the Nginx web server, PHP 7.1, MySQL, PostgreSQL, Redis, Memcached, Node, 
+and all of the other goodies you need to develop amazing Laravel applications.
+
+// LARAVEL LUMEN:
+
+1. Lightweight laravel framework to develope APIs
+
+
+
+https://lumen.laravel.com/docs/5.5
+
+
+
+// iCOMPOSER..   
+WHAT IS COMPOSER?
+-COMPOSER IS DEPENDENCY MANAGER FOR PHP..
+WHY COMPOSER?
+- In general, if we wish to include two classe from two separate files then we need to include those two files in our file.
+- In composer,  if we have installed all libraries using composer then we can direclty define the class object.
+Here, we just need to include one file i.e Autoloader.php, which includes all files in the script.
+hence, we do not need to include two different files for tow classes.
+- we can just place library name and * in composer json file in require array, and composer update to install
+composer global require "laravel/installer"
+// install laravel
+composer create-project --prefer-dist laravel/laravel earth_movers
+// create database in phpmyadmin
+earth_movers 
+
+//If you have PHP installed locally and you would like to use PHP's built-in development server to serve your application, you may use the serve Artisan command. This command will start a development server at http://localhost:8000:
+php artisan serve
+// create modal 
+php artisan make:model Login
+// to create another table using migrations
+php artisan make:migration create_dogs_table
+// place schema in migration table  in to up() methos like below
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
+        });
+//you can run the migration to create the cars table using the following Artisan command:
+php artisan migrate
+//To rollback the previous migration, just execute the following command in the command line:
+php artisan migrate:rollback
+
+// create contreoller
+php artisan make:controller LoginController
+
+// create model Login
+php artisan make:model Login 
+// include Login modal in LoginController
+use App\Login;
+// place all css and js files in public folder
+// create index.blade.php file in resources/views  (you can create more folders and store blade files into that as well)
+resources/views/login index.blade.php
+// load css and js file in this blade file as below,
+<link href="{{ asset('assets/css/bootstrap/bootstrap.css') }}" rel="stylesheet">
+<script src="assets/js/plugins/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="{{ asset('assets/js/plugins/nicescroll/jquery.nicescroll.min.js') }}"></script>
+// always define the query fucntions in modal only and call those functions in controller. That is why we need to include modal in controller
+
+
+//.......................... to create constants and using in laravel 
+//1. create app/config/constants.php  
+//2.place below code  
+return [ 'ADMIN_NAME'=>'administrator' , 'AUTHOR'=>'Anand Lagad']; // i.e associtive array
+//3. use as below
+Config::get('constants.ADMIN_NAME');
+//.......................................................................
+
+
+//.............POST DATA TO CONTROLLER METHOD FROM BLADE FILE
+1. SET FORM TAG AS SHOWN BELOW
+<form role="form" action="{{ url('/add_labour_type') }}" method="post" id="labour_type_form" name="labour_type_form">
+<input type="hidden" name="_token" value="{{ csrf_token() }}"> // dont forget to put token in every form tag
+2. DEFINE METHOD IN CONTROLLER FILE 
+Route::post('/add_labour_type', 'LabourTypeController@add_labour_type');
+
+//..................................................................
+
+//BLADE:
+-It is Templating engine
+-we can define variables and php code in {{ }} braces.
+
+//Routes 
+- we can create schema at routes.php file when method loaded.
+Route::get('/',function(){
+
+	Schema::create('art',function($t){
+
+		$t->increments->('id');
+		$t->string('name');
+	});
+}); 
+
+//FORMS at blade
+-can create form/all html tags using php laravel. No need to create html tag
+{{ Form::label('name','value',array('accociative'=>'properties like class,placeholder')) }}
+{{ Form::open(array('url'=>'thanks')) }}
+
+//LARAVEL unit testing
+PHPUnit
+-tests folder contains examples for unit testing
+-it comes as a default in laravel installation
+-PHPUnit is present in vendor/bin/PHPUnit
+-to run the phpunit ..   root_folder$ cd vendor/bin/phpuit -h  // to get info..
+-we can create alias to run phpunit from root.. root_folder$ alias phpunit='vendor/bin/phpunit' ..then run $ phpunit -h.. from rootit works
+- we can run example test as, $ phpunit app/tests/ExampleTest.php
+
+// assertion in phpunit
+ASSERTION
+-key component in laravel
+- asserttion is the function which evaluates the defined condition to see if its met in a specific way.if the condition is met then the test is succeed.
+- there are about 90 different assertion available in phpunit
+
+// LARAVEL HELPER CLASSES
+{{ HTML::style('css/abc.css') }}
+{{ HTML::script('js/abc.js') }}
+{{ HTML::image('img/abc.png','alt text') }}
+
+@yield('content')
+@include('layout.header')
+@extends('abc')
+
+// REMOVE project from public to root
+- cut and paste .htaccess from public to root folder
+- rename server.php to index.php in the root
+
+// FOLDERS....
+// MUDDLEWARE
+- authentication is handled throughmiddleware.
+- middleware executes between the URL hitting and executing the method from controller
+- menas it executes while libraries are loading before executing controller method.
+example: checking login status before every method execution
+         creating logs etc.
+- Procedure:
+      1. create middeleware file in Http\middeleware
+      2. write code in middleware
+      3. register middleware class in kernel.php in http\kenal.php
+      4. middleware can be register in kernal.php in , middleware or routemiddleware or middlewareGroups etc.
+      5. example: if u have registred in routemiddleware then use as below,
+      Route::get('admin/{number}',function($number){
+
+			echo "The number is : $number";
+
+		})->middleware('logger');
+		this will print log when hit the url
+- we can pass except or only as a keys in array for controllers to decide where to execute middleware
+
+//JOBS
+- handles cron jobs
+//Listeners
+- In listeners,we can define what should be happened when an event fires. We define events in Events folder 
+
+// DATABASE
+1.factories for fake classes
+2.migrations- no nned to open phpmyadmin to create tables, can update tables into database with migrations
+
+// RESOURCES /LANG/
+- we can write translations here to create multilingual website
+
+//METHODS IN ROUTE
+GET / POST / PUT / DELETE/ PATCH  / ANY - just like request variable in php / MATCH - like route gropus to group PUT ,PATCH
+- we can put regex at route for closure functions to validate values.
+Route::get('admin/{number}',function($number){
+
+	echo "The number is : $number";
+
+})->where( ["number"=>"[0-9]+"]);
+
+- we can use named routes, i.e giving name to route.
+Route::get('admin/{number}',function($number){
+
+	echo "The number is : $number";
+
+})->where( ["number"=>"[0-9]+"])->name('admin-number');
+ this can be used further as,
+ Route::get('/',function($number){
+
+	echo route('admin-number',['sortby'=>'number']);  //route here is helper class
+});
+
+- we can define routes in ROUTe GROUP as well.
+ Route::group(['prefix'=>'admin-panel',['namespace'=>'admin']],function(){
+
+ 	Route::get('admin',function($number){
+
+		echo route('admin-number',['sortby'=>'number']);  //route here is helper class
+	});
+
+ });
+ then, the url will be: adminpanel/admin. WE can apply common properties to all routes by grouping.
+- can use nested groups.
+
+// PASSING DATA TO VIEW
+$data=['a','b','c','d'];
+- return view('admin',compact('data')); 
+- return view('admin')->with('data',$data); we can use multiple 'with' for number of array variables
+- we can pass array in with method : with(['data'=> $data,'names'=>$data]);
+- we can also call like : withNmaes($data);  at view .. $names shoul be in for loop to extract data
+
+// FORELSE IN LARAVEL
+@forelse($data as $person)  // if $data is set the run for loop
+
+@empty    // else run empty part
+
+@endforelse
+
+//SECTION OVERRIDING
+laravel video part 15...
+@section('content')
+@parent
+  some txet which will be added below the parents section
+@endsection
+
+// difference between laravel include and php include ..video 16
+// echo complex.. and layout communication.. video 17
+// LOAD DIFFERENT CSS..STACK. video 18
+STACK:
+- stack is used to push data to to stack section from child file to parent file
+suppose, master.blade file is having,  @stack('css') below the title 
+then, we can push css files from child.blade like,
+@push('css')
+<link src="login.css">
+@endpush
+- this will put css file at master head section.
+- useful to manage css and js files.
+
+// COMMENTING iN LARAVEL
+{{-- comment --}}
+
+//MODELS
+- define one MODEL for every table
+= MODEL NAME MUST BE SINGULAR OF DATABASE TABLE.. to connect to table and model without specifying connection between them
+- every table must contain primary as id only. do not provide table name for primary key
+- mention table name in model as , protected $table='tabel_name';
+- if you dont wants to sinsert timestamps in table then you can specify, public $timestapms=false; in model
+
+// FILLABLE AND GUARDED / MASS ARGUMENT ..video 25
+protected $fillable = []; : specify the number of files as array which you wants to insert only.
+protected $guarded= []; : specify number of fields you dont want to insert into table.. like id , crrated at and updated at fileds
+
+
+// GET LAST INSERTED ID IN LARAVEL
+- we can insert data using , $product= new Product::create(); method at controller or model.
+- we can pass array of data to this method and it will return product primary id for that row. as, $product->id;
+
+//FILL method..
+pass the values to in the form of array to insert using table object , we use fill method. $customer->fill(['a'=>'a','b'=>'abc']);
+
+// TRAIL method  ... video 27
+To maintain history of deleted data, or maintaining some of the importanat data before permenant delete()
+Example: 
+$cust= new Cstomer::find(1);
+
+$trail= new Trail(['uname'=>$cust->username]);
+$trail->save();
+$cust->delete();
+........................
+
+// DESTROY method
+Customer::destroy(1);   deletes 1st(PK) record from customers table.
+
+// USE HTML OF LARAVEL .. 28/29
+- we need to get the HTML package to install laravel html 
+- in composer.json file within the require variable write, "illiminate/html": "5.*" and update composer to isnatll
+- we need to add aliases for these packages, alias means providing single anem to pathe.
+
+"HTML" => illuminate\html\HtmlFacades::class,
+"FORM" => illuminate\html\FormFacades::class
+
+// FORM DATA SUBMITTED  .. video 30
+$field_one= Input::get(); / Input::only([array]); Input::except([array]);
+
+OR 
+
+function formSubmit(Requset $requset){
+	$fields= $requset->get('get_one'); / all();
+}
+
+// VALIDATOR .. video 31.. 32
+
+// WE CAN SEE THE PACKAGES INSTALLED IN PROVIDERS ARRAY IN APP.PHP file in Config folder
+
+
+// WE CAN CREATE THE REQUEST CLASES FOR VALIDATION USING ARTISAN.. 34
+- where we can define the validation rules.
+
+// FLASH AND REFLASH.. 37
+we can take data using session()->flash() and reflash() from one form to another and another.
+
+// MIGRATIONS:
+php artisan make:mogration create_user_table
+php artisan migrate // to update table in dtabase
+php artisan migrate:rollback  // to rollback i.e undo all table creations in the dtatabse
+php artisan migrate:refresh // rollback and migrate again
+
+// DATABASE QUERY LOG.. to log all query details.
+DB::enableQueryLog();  //after this method calling. all queries will log into a array
+
+run queries...
+
+$log=getQueryLog(); // get all query logs in array like, time, bindings and query 
+
+// WHERE IN QUERY..
+where, orwhere, whereIn(), whereNotIn(), WhereBetween(), whereNotBetween(), whereColumn(),
+->whereNull('updated_at')
+->whereDate('created_at', '2016-12-31')
+->whereMonth('created_at', '12')
+->where('options->language', 'en')  // deal with json datatype
+ 
+>orderBy('name', 'desc') 
+
+                ->groupBy('account_id')
+                ->having('account_id', '>', 100)
+                ->get();
+ etc.
+
+$users = DB::table('orders')
+                ->select('department', DB::raw('SUM(price) as total_sales'))
+                ->groupBy('department')
+                ->havingRaw('SUM(price) > 2500')
+                ->get();
+
+$users = DB::table('users')->skip(10)->take(5)->get();
+$users = DB::table('users')>offset(10)>limit(5)>get();
+DB::table('users')>where('id', 1)>update(['votes' => 1]); 
+DB::table('users')->where('votes', '>', 100)->delete();
+
+https://laravel.com/docs/5.0/eloquent.
+SOFT DELETING..
+
+// PHP UNIT TESTING...
+https://semaphoreci.com/community/tutorials/getting-started-with-phpunit-in-laravel
+
+
+// LARAVEL JOINS.......................
+$users = DB::table('users')
+            ->join('contacts', 'users.id', '=', 'contacts.user_id')
+            ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->select('users.*', 'contacts.phone', 'orders.price')
+            ->get();
+
+            ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+            ->crossJoin('colours')
+
+// https://laravel.com/docs/5.5/eloquent
+
+// DATA ENCRYPTION IN LARAVEL:
+1. The Laravel Hash facade provides secure Bcrypt hashing for storing user passwords.
+ 
+ $password = bcrypt('secret');
+ or 
+ $password = Hash::make('secret');
+
+ if (Hash::check('secret', $hashedPassword))
+  {
+      // The passwords match...
+  }
+
+2. Laravel provides facilities for strong AES encryption via the Mcrypt PHP extension.
+  $encrypted = Crypt::encrypt('secret');  $decrypted = Crypt::decrypt($encryptedValue);
+
+
+
+           
+// LARVEL FACTORIES AND SEEDS.... https://laravel-news.com/learn-to-use-model-factories-in-laravel-5-1
+1. Laravel includes a simple method of seeding your database with test data using seed classes.
+2. All seed classes are stored in the database/seeds directory.
+3.  By default, a  DatabaseSeeder class is defined for you. 
+    From this class, you may use the call method to run other seed classes, allowing you to control the seeding order.
+
+STEPS: 
+0. Create table using migrations. .. users_test
+1. php artisan make:seeder UsersTableSeeder .. this will create seeder in database/seeds folder.
+2. add a database insert statement to the run method:
+
+   for ($i=0; $i < 3; $i++) { 
+        DB::table('users_test')->insert([
+              'name' => str_random(8),
+              'email' => str_random(12).'@mail.com',
+              'password' => bcrypt('123456')
+          ]);
+      }
+
+3. run this command from terminal : php artisan db:seed --class=UsersTableSeeder   
+
+OR : 
+ @ create model users_tets, Create migration users_tets, create model in factory and define (factory) insert query, create seerder using php artisan, define number of objects to create 
+ at run() method of the seeder and run that seeder using php artisan.
+
+-1. Crreate model for table you wish.
+
+0. Create table using migrations. .. users_test
+1. Create Factory Model in Factories folder. Writing table insertion query in model.
+1. php artisan make:seeder UsersTableFactorySeeder
+2. Type :  factory(App\User::Class, 75)->create(); in  UsersTableFactorySeeder.php
+3. Run :  php artisan db:seed --class=UsersTableFactorySeeder .. This will create 75 random users into users table.
+
+
+// PAGINATION IN LARAVEL 5...
+1. create 100 + records in table
+2. get data in controller using like, 
+   $users = DB::table('users')->paginate(15);  .. using paginate method.
+
